@@ -175,8 +175,35 @@ src/
 ### 快速部署
 1. Fork 此專案到你的 GitHub 帳號
 2. 在 `vite.config.js` 中修改 `base` 為你的 repository 名稱
-3. 推送代碼，GitHub Actions 將自動部署
-4. 在 repository Settings → Pages 啟用 GitHub Pages
+3. 確保安裝必要依賴：`npm install --save-dev terser`
+4. 推送代碼，GitHub Actions 將自動部署
+5. 在 repository Settings → Pages 啟用 GitHub Pages
+
+## 🐛 常見問題排除
+
+### Q: 建置時出現 "terser not found" 錯誤
+**A**: Vite v3+ 需要手動安裝 terser 進行代碼壓縮
+```bash
+npm install --save-dev terser
+npm run build
+```
+
+### Q: GitHub Pages 顯示 404 頁面
+**A**: 檢查 `vite.config.js` 中的 `base` 設定是否與 repository 名稱一致
+```javascript
+export default defineConfig({
+  base: '/your-actual-repo-name/', // 必須與 GitHub repo 名稱完全一致
+})
+```
+
+### Q: 地理定位功能無法使用
+**A**: 確保使用 HTTPS 訪問網站，GitHub Pages 會自動提供 HTTPS
+
+### Q: 優惠資料無法載入
+**A**: 檢查瀏覽器控制台是否有跨域錯誤，確保所有資源路徑正確
+
+### Q: 手機版介面顯示異常
+**A**: 清除瀏覽器快取，確保載入最新的 CSS 檔案
 
 ## 📞 聯絡資訊
 
