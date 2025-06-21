@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import Fuse from 'fuse.js'
-import storesData from '../data/stores.json'
 
 export const useStoreStore = defineStore('stores', {
   state: () => ({
@@ -19,7 +18,8 @@ export const useStoreStore = defineStore('stores', {
       budgetRange: ''
     },
     isLoading: false,
-    error: null
+    error: null,
+    currentCompanyId: null // 新增一個狀態來記錄當前公司
   }),
 
   getters: {
@@ -137,19 +137,30 @@ export const useStoreStore = defineStore('stores', {
   },
 
   actions: {
-    async loadStores() {
-      this.isLoading = true
-      this.error = null
-      
+    async loadStores(companyId) {
+      // 如果已經是同一個公司且資料已載入，則不重複載入
+      if (this.currentCompanyId === companyId && this.allStores.length > 0) {
+        return;
+      }
+
+      this.isLoading = true;
+      this.error = null;
+      this.allStores = []; // 清空舊資料
+
       try {
-        // 模擬 API 載入延遲
-        await new Promise(resolve => setTimeout(resolve, 500))
-        this.allStores = storesData
-      } catch (error) {
-        this.error = '載入店家資料失敗'
-        console.error('Error loading stores:', error)
+        // 從 public 資料夾抓取對應的 JSON
+        // vite.config.js 的 base 路徑會自動處理前綴
+        const response = await fetch(`./stores-${companyId}.json`);
+        if (!response.ok) {
+          throw new Error(`找不到 ${companyId} 的資料檔案`);
+        }
+        this.allStores = await response.json();
+        this.currentCompanyId = companyId; // 記錄當前公司
+      } catch (e) {
+        this.error = e.message;
+        console.error("載入資料失敗:", e);
       } finally {
-        this.isLoading = false
+        this.isLoading = false;
       }
     },
 

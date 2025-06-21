@@ -88,6 +88,7 @@ import Icon from './components/Icon.vue'
 
 export default {
   name: 'App',
+  props: ['companyId'], // 接收 router 傳來的 props
   components: {
     OfferList,
     OfferModal,
@@ -123,7 +124,13 @@ export default {
   },
   methods: {
     async loadStores() {
-      await this.storeStore.loadStores()
+      if (this.companyId) {
+        await this.storeStore.loadStores(this.companyId)
+      } else {
+        // 如果沒有 companyId 就跳轉回選擇頁
+        this.$router.push({ name: 'Selector' });
+        return;
+      }
     },
     handleOfferSelected(offer) {
       this.selectedOffer = offer
@@ -164,8 +171,10 @@ export default {
   },
   async mounted() {
     await this.loadStores()
-    // 自動啟動定位流程 - 位置優先策略
-    this.getCurrentLocation()
+    // 如果資料載入成功，才執行定位
+    if (!this.storeStore.error && this.companyId) {
+      this.getCurrentLocation()
+    }
   }
 }
 </script>
