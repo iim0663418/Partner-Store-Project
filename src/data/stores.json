@@ -1,0 +1,620 @@
+[
+  {
+    "id": 1,
+    "name": "台北101購物中心",
+    "category": "購物中心",
+    "region": "台北市",
+    "address": "台北市信義區信義路五段7號",
+    "phone": "02-8101-8800",
+    "description": "台北101購物中心是台灣最具指標性的購物地標，提供國際精品、美食餐廳和休閒娛樂。",
+    "lat": 25.0338,
+    "lng": 121.5645,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "discount",
+        "title": "國際精品滿萬享9折",
+        "description": "精選國際品牌全館滿10,000元即享9折優惠",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "cashback",
+        "title": "信用卡回饋5%",
+        "description": "指定信用卡消費享最高5%現金回饋",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：美食街餐點8折",
+        "description": "出示員工證享美食街所有餐點8折優惠，不限消費金額",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "新光三越台北信義新天地A11",
+    "category": "百貨公司",
+    "region": "台北市",
+    "address": "台北市信義區松壽路11號",
+    "phone": "02-2723-3666",
+    "description": "結合時尚、美食與娛樂的複合式購物空間，是台北信義區的購物熱點。",
+    "lat": 25.0359,
+    "lng": 121.5654,
+    "openingHours": "週一至週四 11:00-21:30，週五至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "gift",
+        "title": "週年慶限量贈品",
+        "description": "滿額贈送限量精美禮品，數量有限送完為止",
+        "validUntil": "2024-11-30",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "member",
+        "title": "會員專屬9折",
+        "description": "VIP會員享全館商品9折優惠",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：購物滿額85折",
+        "description": "員工購物滿3,000元享85折優惠，可與其他活動併用",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "統一時代百貨",
+    "category": "百貨公司",
+    "region": "台北市",
+    "address": "台北市信義區忠孝東路五段8號",
+    "phone": "02-2786-6600",
+    "description": "位於台北市中心的時尚百貨，提供多元化的購物選擇。",
+    "lat": 25.0417,
+    "lng": 121.5681,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "discount",
+        "title": "時尚服飾7折起",
+        "description": "精選時尚服飾品牌7折起，款式齊全",
+        "validUntil": "2024-11-25",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "bundle",
+        "title": "美妝買二送一",
+        "description": "指定美妝品牌買二送一，混搭也可以",
+        "validUntil": "2024-11-20",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "cashback",
+        "title": "員工專享：咖啡廳免費升級",
+        "description": "出示員工證可免費將一般咖啡升級為大杯，每日限一次",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "大遠百",
+    "category": "百貨公司",
+    "region": "台北市",
+    "address": "台北市中山區南京東路三段251號",
+    "phone": "02-2771-8000",
+    "description": "歷史悠久的百貨公司，提供各式商品和餐飲選擇。",
+    "lat": 25.0527,
+    "lng": 121.5435,
+    "openingHours": "週一至週日 11:00-21:30",
+    "offers": [
+      {
+        "type": "member",
+        "title": "新會員首購88折",
+        "description": "新加入會員首次購物享88折優惠",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "cashback",
+        "title": "週末消費雙倍點數",
+        "description": "週末購物享雙倍紅利點數回饋",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "gift",
+        "title": "員工專享：停車免費",
+        "description": "員工憑證消費滿500元即享2小時免費停車",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "美麗華百樂園",
+    "category": "購物娛樂",
+    "region": "台北市",
+    "address": "台北市中山區敬業三路20號",
+    "phone": "02-2175-3456",
+    "description": "集購物、美食、娛樂於一體的複合式商場，有著名的摩天輪地標。",
+    "lat": 25.0836,
+    "lng": 121.5501,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "bundle",
+        "title": "購物+摩天輪套票優惠",
+        "description": "消費滿2000元即可優惠價搭乘摩天輪",
+        "validUntil": "2024-12-15",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "餐廳聯合85折",
+        "description": "全館餐廳聯合優惠85折",
+        "validUntil": "2024-11-30",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "gift",
+        "title": "員工專享：摩天輪免費搭乘",
+        "description": "出示員工證可免費搭乘摩天輪一次，每月限一次",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：影城票價7折",
+        "description": "員工購買電影票享7折優惠，可預約假日場次",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "西門紅樓",
+    "category": "文創商場",
+    "region": "台北市",
+    "address": "台北市萬華區成都路10號",
+    "phone": "02-2311-9380",
+    "description": "台北市定古蹟，現為文創商場，販售台灣原創商品和文創小物。",
+    "lat": 25.0420,
+    "lng": 121.5081,
+    "openingHours": "週二至週日 11:00-21:30",
+    "offers": [
+      {
+        "type": "discount",
+        "title": "台灣文創商品9折",
+        "description": "精選台灣原創文創商品享9折優惠",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "gift",
+        "title": "消費送明信片",
+        "description": "任意消費即贈送限量西門紅樓明信片",
+        "validUntil": "2024-11-30",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：文創商品額外8折",
+        "description": "員工購買文創商品可在原有優惠基礎上再享8折",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "京站時尚廣場",
+    "category": "購物中心",
+    "region": "台北市",
+    "address": "台北市大同區承德路一段1號",
+    "phone": "02-2555-9999",
+    "description": "連結台北車站的時尚購物中心，交通便利，品牌齊全。",
+    "lat": 25.0478,
+    "lng": 121.5170,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "cashback",
+        "title": "電子支付10%回饋",
+        "description": "使用指定電子支付享10%現金回饋",
+        "validUntil": "2024-11-25",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "member",
+        "title": "會員生日禮",
+        "description": "會員生日月享專屬優惠及生日禮",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "gift",
+        "title": "員工專享：免費置物櫃",
+        "description": "出示員工證可免費使用全館置物櫃服務",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：美食街統一85折",
+        "description": "員工於美食街消費統一享85折優惠，不限金額",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "台中大遠百",
+    "category": "百貨公司",
+    "region": "台中市",
+    "address": "台中市西屯區台灣大道三段251號",
+    "phone": "04-2251-3456",
+    "description": "台中指標性百貨公司，提供完整的購物體驗。",
+    "lat": 24.1611,
+    "lng": 120.6413,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "discount",
+        "title": "冬季服飾6折起",
+        "description": "秋冬服飾全面6折起，保暖又時尚",
+        "validUntil": "2024-12-20",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "bundle",
+        "title": "化妝品套組優惠",
+        "description": "精選化妝品套組特價，送精美化妝包",
+        "validUntil": "2024-11-30",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：全館商品額外9折",
+        "description": "員工購物可在任何優惠基礎上再享9折，無金額限制",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "新光三越台中中港店",
+    "category": "百貨公司",
+    "region": "台中市",
+    "address": "台中市西屯區台灣大道三段301號",
+    "phone": "04-2254-3000",
+    "description": "台中地區知名百貨公司，匯集國際品牌與在地特色。",
+    "lat": 24.1619,
+    "lng": 120.6418,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "member",
+        "title": "VIP會員雙倍點數",
+        "description": "VIP會員購物享雙倍點數累積",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "gift",
+        "title": "滿額贈台中限定好禮",
+        "description": "消費滿5000元贈送台中限定紀念品",
+        "validUntil": "2024-11-30",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "cashback",
+        "title": "員工專享：餐廳消費15%回饋",
+        "description": "員工於館內餐廳消費享15%現金回饋",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      },
+      {
+        "type": "gift",
+        "title": "員工專享：專屬休息室",
+        "description": "員工可使用專屬休息室，提供免費茶水及充電設備",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "勤美誠品綠園道",
+    "category": "文創商場",
+    "region": "台中市",
+    "address": "台中市西區公益路68號",
+    "phone": "04-2328-1000",
+    "description": "結合書店、餐飲與文創的複合式空間，是台中文青聚集地。",
+    "lat": 24.1409,
+    "lng": 120.6646,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "bundle",
+        "title": "書籍+咖啡優惠組合",
+        "description": "購書搭配咖啡享套餐優惠價",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "文具用品85折",
+        "description": "精選文具用品85折，文青必備",
+        "validUntil": "2024-11-25",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "gift",
+        "title": "員工專享：免費閱讀空間",
+        "description": "員工可免費使用安靜閱讀空間，不限時間",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：書籍額外8折",
+        "description": "員工購書可在原優惠基礎上再享8折優惠",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "高雄大遠百",
+    "category": "百貨公司", 
+    "region": "高雄市",
+    "address": "高雄市苓雅區三多四路21號",
+    "phone": "07-332-1000",
+    "description": "高雄知名百貨公司，提供多元化購物選擇。",
+    "lat": 22.6111,
+    "lng": 120.3158,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "cashback",
+        "title": "南部限定現金回饋",
+        "description": "南部地區專屬5%現金回饋優惠",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "運動用品7折",
+        "description": "全館運動用品7折優惠",
+        "validUntil": "2024-12-15",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "gift",
+        "title": "員工專享：健身房體驗券",
+        "description": "員工可獲得館內健身房免費體驗券，有效期一個月",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "統一夢時代購物中心",
+    "category": "購物中心",
+    "region": "高雄市",
+    "address": "高雄市前鎮區中華五路789號",
+    "phone": "07-973-3888",
+    "description": "南台灣最大購物中心，擁有豐富的購物、餐飲和娛樂設施。",
+    "lat": 22.5896,
+    "lng": 120.3049,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "bundle",
+        "title": "購物+娛樂超值套票",
+        "description": "購物滿額享電影票及遊戲優惠套票",
+        "validUntil": "2024-12-20",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "member",
+        "title": "會員獨享停車優惠",
+        "description": "會員消費滿額享免費停車服務",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "gift",
+        "title": "員工專享：娛樂設施免費使用",
+        "description": "員工可免費使用遊戲區及娛樂設施，每月限三次",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：餐廳聯合8折",
+        "description": "員工於館內任一餐廳消費享8折優惠",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "新光三越高雄左營店",
+    "category": "百貨公司",
+    "region": "高雄市", 
+    "address": "高雄市左營區高鐵路123號",
+    "phone": "07-350-3000",
+    "description": "連結高鐵左營站的百貨公司，交通便利。",
+    "lat": 22.6871,
+    "lng": 120.3075,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "discount",
+        "title": "高鐵乘客專屬8折",
+        "description": "出示高鐵票根享全館8折優惠",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "gift",
+        "title": "消費送高雄伴手禮",
+        "description": "消費滿額贈送高雄在地特色伴手禮",
+        "validUntil": "2024-11-30",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "cashback",
+        "title": "員工專享：交通費補助",
+        "description": "員工消費滿1000元可申請50元交通費補助",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "大江購物中心",
+    "category": "購物中心",
+    "region": "桃園市",
+    "address": "桃園市中壢區中園路二段501號",
+    "phone": "03-468-0999",
+    "description": "桃園地區大型購物中心，提供完整的購物娛樂體驗。",
+    "lat": 24.9393,
+    "lng": 121.2435,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "cashback",
+        "title": "週三會員日雙倍回饋",
+        "description": "每週三會員購物享雙倍現金回饋",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "bundle",
+        "title": "親子套餐優惠",
+        "description": "親子餐廳套餐優惠，小朋友免費",
+        "validUntil": "2024-12-15",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：親子設施免費",
+        "description": "員工子女可免費使用親子遊戲區及相關設施",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      },
+      {
+        "type": "gift",
+        "title": "員工專享：VIP停車位",
+        "description": "員工可使用專屬VIP停車位，距離入口最近",
+        "validUntil": "2024-12-31",
+        "featured": false,
+        "isEmployeeOffer": true
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "台茂購物中心",
+    "category": "購物中心",
+    "region": "桃園市",
+    "address": "桃園市蘆竹區南崁路一段112號",
+    "phone": "03-311-6666",
+    "description": "桃園老字號購物中心，擁有多樣化的店舖選擇。",
+    "lat": 25.0577,
+    "lng": 121.2938,
+    "openingHours": "週一至週日 11:00-22:00",
+    "offers": [
+      {
+        "type": "member",
+        "title": "老會員回饋專案",
+        "description": "資深會員享專屬優惠及生日禮遇",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "家電用品特賣",
+        "description": "家電用品年末特賣，最低5折起",
+        "validUntil": "2024-12-20",
+        "featured": false,
+        "isEmployeeOffer": false
+      },
+      {
+        "type": "discount",
+        "title": "員工專享：家電產品額外85折",
+        "description": "員工購買家電產品可在特賣價基礎上再享85折",
+        "validUntil": "2024-12-31",
+        "featured": true,
+        "isEmployeeOffer": true
+      }
+    ]
+  }
+]

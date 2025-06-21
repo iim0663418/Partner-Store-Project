@@ -1,0 +1,374 @@
+/* 1. 引入 Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+/* 2. CSS 變數定義 (Design Tokens) */
+:root {
+  /* Colors */
+  --primary-color: #007BFF;
+  --accent-color: #FF9800;
+  --text-primary: #212529;
+  --text-secondary: #6C757D;
+  --bg-color: #F8F9FA;
+  --surface-color: #FFFFFF;
+  --border-color: #DEE2E6;
+  --success-color: #28A745;
+  --error-color: #DC3545;
+
+  /* Icon Sizes */
+  --icon-size-sm: 0.875rem;   /* 14px, 用於次要資訊或標籤內 */
+  --icon-size-md: 1.125rem;   /* 18px, 用於主要按鈕和內文 */
+  --icon-size-lg: 1.5rem;     /* 24px, 用於頁面標題等大型指示 */
+  
+  /* Icon Spacing */
+  --icon-spacing-sm: 0.375rem; /* 6px, 緊密間距 */
+  --icon-spacing-md: 0.5rem;   /* 8px, 標準間距 */
+  --icon-spacing-lg: 0.75rem;  /* 12px, 寬鬆間距 */
+
+  /* Typography - Mobile First */
+  --font-family-base: 'Inter', 'Noto Sans TC', sans-serif;
+  --h1-font-size: 1.75rem;        /* 手機版較小 */
+  --h2-font-size: 1.25rem;        /* 手機版較小 */
+  --h3-font-size: 1.125rem;
+  --body-font-size: 1rem;
+  --caption-font-size: 0.875rem;
+  
+  /* Desktop Typography (768px+) */
+  --h1-font-size-desktop: 2.25rem;
+  --h2-font-size-desktop: 1.5rem;
+  
+  /* Spacing & Radius */
+  --spacing-unit: 8px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* 3. 全局基礎樣式 (Global Base Styles) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--body-font-size);
+  color: var(--text-primary);
+  background-color: var(--bg-color);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+/* 4. 元件樣式 (Component Styles) */
+
+/* 按鈕 (Button) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 3);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-md);
+  font-size: var(--body-font-size);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  opacity: 0.85;
+}
+
+.btn-secondary {
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-color);
+}
+
+/* 店家卡片 (Store Card) */
+.store-card {
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: 1px solid transparent;
+}
+
+.store-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-color);
+}
+
+.store-card-content {
+  padding: calc(var(--spacing-unit) * 3);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.store-card-title {
+  font-size: var(--h3-font-size);
+  font-weight: 700;
+  margin: 0 0 var(--spacing-unit);
+  color: var(--text-primary);
+}
+
+.store-card-meta {
+  font-size: var(--caption-font-size);
+  color: var(--text-secondary);
+  margin: 0;
+  display: flex;
+  gap: var(--spacing-unit);
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+}
+
+.store-card-category {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 4px calc(var(--spacing-unit) * 1.5);
+  border-radius: calc(var(--border-radius-md) * 2);
+  font-size: var(--caption-font-size);
+  font-weight: 600;
+}
+
+.store-card-region {
+  background-color: var(--bg-color);
+  color: var(--text-secondary);
+  padding: 4px calc(var(--spacing-unit) * 1.5);
+  border-radius: var(--border-radius-md);
+  font-size: var(--caption-font-size);
+}
+
+.store-card-discount {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 2px var(--spacing-unit);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* 輸入框 (Input) */
+.form-input {
+  width: 100%;
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--surface-color);
+  font-size: var(--body-font-size);
+  font-family: var(--font-family-base);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.form-input::placeholder {
+  color: var(--text-secondary);
+}
+
+/* 選擇框 (Select) */
+.form-select {
+  width: 100%;
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--surface-color);
+  font-size: var(--body-font-size);
+  font-family: var(--font-family-base);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* 標籤 (Tags) */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px calc(var(--spacing-unit) * 1.5);
+  border-radius: calc(var(--border-radius-md) * 2);
+  font-size: var(--caption-font-size);
+  font-weight: 600;
+}
+
+.tag-primary {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: var(--primary-color);
+  border: 1px solid rgba(0, 123, 255, 0.2);
+}
+
+.tag-success {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--success-color);
+  border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.tag-accent {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: var(--accent-color);
+  border: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+/* 評分 (Rating) */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rating-star {
+  width: 16px;
+  height: 16px;
+  color: var(--accent-color);
+}
+
+.rating-star.empty {
+  color: var(--border-color);
+}
+
+/* 工具提示 (Utilities) */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.bg-surface {
+  background-color: var(--surface-color);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.rounded-lg {
+  border-radius: var(--border-radius-lg);
+}
+
+.rounded-md {
+  border-radius: var(--border-radius-md);
+}
+
+/* 響應式設計 - Mobile First */
+/* 基礎樣式已經是手機版 */
+
+/* 平板和桌面版 (768px+) */
+@media (min-width: 768px) {
+  :root {
+    --h1-font-size: var(--h1-font-size-desktop);
+    --h2-font-size: var(--h2-font-size-desktop);
+  }
+  
+  .store-card-content {
+    padding: calc(var(--spacing-unit) * 3);
+  }
+  
+  /* 更大的間距 */
+  .container-spacing {
+    padding: calc(var(--spacing-unit) * 3);
+  }
+}
+
+/* 手機版更緊湊的間距 */
+@media (max-width: 767px) {
+  :root {
+    --spacing-unit: 6px;
+  }
+  
+  .store-card-content {
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .container-spacing {
+    padding: calc(var(--spacing-unit) * 2);
+  }
+}
+
+/* 統一圖示系統 */
+.icon {
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.icon-sm {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.icon-md {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
+.icon-lg {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}
+
+/* 圖示間距 - 用於圖示和文字的間距 */
+.icon-spacing-sm {
+  margin-right: var(--icon-spacing-sm);
+}
+
+.icon-spacing-md {
+  margin-right: var(--icon-spacing-md);
+}
+
+.icon-spacing-lg {
+  margin-right: var(--icon-spacing-lg);
+}
+
+/* 常用組合樣式 */
+.icon-button {
+  /* 按鈕內的圖示標準配置 */
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+  margin-right: var(--icon-spacing-md);
+  flex-shrink: 0;
+}
+
+.icon-info {
+  /* 資訊項目的圖示標準配置 */
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+  margin-right: var(--icon-spacing-md);
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.icon-action {
+  /* 主要操作的圖示標準配置 */
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  margin-right: var(--icon-spacing-md);
+  flex-shrink: 0;
+}
