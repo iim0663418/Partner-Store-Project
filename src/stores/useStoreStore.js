@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia'
 import Fuse from 'fuse.js'
 
+// **關鍵**：將 BASE_URL 換成您剛才複製的網路應用程式網址
+const BASE_URL = 'https://script.google.com/macros/s/AKfycbxZXmuRtpzQjWxT7MdzH2AxK_DM8vwpMmksoINlI6dhUxViba8yy2ODdqV48vR876hI/exec';
+
+// FILE_ID_MAP 現在不再需要了，可以刪除
+
 export const useStoreStore = defineStore('stores', {
   state: () => ({
     allStores: [],
@@ -138,24 +143,29 @@ export const useStoreStore = defineStore('stores', {
 
   actions: {
     async loadStores(companyId) {
-      // 如果已經是同一個公司且資料已載入，則不重複載入
-      if (this.currentCompanyId === companyId && this.allStores.length > 0) {
+      if (!companyId) {
+        this.error = "未指定公司代號";
         return;
       }
+      if (this.currentCompanyId === companyId && this.allStores.length > 0) return;
 
       this.isLoading = true;
       this.error = null;
-      this.allStores = []; // 清空舊資料
+      this.allStores = [];
+
+      // 組成帶有查詢參數的 API 請求網址
+      const url = `${BASE_URL}?companyId=${companyId}`;
 
       try {
-        // 從 public 資料夾抓取對應的 JSON
-        // vite.config.js 的 base 路徑會自動處理前綴
-        const response = await fetch(`./stores-${companyId}.json`);
-        if (!response.ok) {
-          throw new Error(`找不到 ${companyId} 的資料檔案`);
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          throw new Error(data.error || '從 API 載入資料失敗');
         }
-        this.allStores = await response.json();
-        this.currentCompanyId = companyId; // 記錄當前公司
+        
+        this.allStores = data;
+        this.currentCompanyId = companyId;
       } catch (e) {
         this.error = e.message;
         console.error("載入資料失敗:", e);

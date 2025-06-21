@@ -37,6 +37,7 @@
 ### 外部服務
 - **ArcGIS Geocoding API** - 地址搜尋與座標轉換
 - **Browser Geolocation API** - GPS定位服務
+- **Google Apps Script API** - 雲端資料管理與存取
 
 ### 設計原則
 - **行動裝置優先** (Mobile-First)
@@ -82,10 +83,8 @@ src/
 │   ├── OfferModal.vue   # 優惠詳情彈窗
 │   ├── CustomLocationInput.vue  # 自定義位置輸入
 │   └── Icon.vue         # 圖標組件
-├── data/
-│   └── stores.json      # 店家和優惠資料
 ├── stores/
-│   └── useStoreStore.js # Pinia 狀態管理
+│   └── useStoreStore.js # Pinia 狀態管理（整合 Google Apps Script）
 ├── styles/              # 樣式文件
 ├── App.vue             # 主應用組件
 └── main.js             # 應用入口點
@@ -127,9 +126,18 @@ src/
 
 ## 🔧 開發指南
 
-### 新增店家
-1. 編輯 `src/data/stores.json`
-2. 添加店家基本資訊（座標可使用 Google Maps 取得）
+### 資料管理
+專案已整合 **Google Apps Script API** 進行雲端資料管理：
+
+#### 新增店家資料
+1. 將店家資料上傳至 Google Drive（JSON 格式）
+2. 透過 Google Apps Script 建立 Web API
+3. 在 `src/stores/useStoreStore.js` 中更新 `BASE_URL`
+4. 使用 `companyId` 參數區分不同公司的資料
+
+#### 本地開發
+1. 確保 Google Apps Script API 已部署並可存取
+2. 店家基本資訊格式包含座標（可使用 Google Maps 取得）
 3. 添加員工專屬優惠（設定 `isEmployeeOffer: true`）
 
 ### 自定義樣式
@@ -200,7 +208,11 @@ export default defineConfig({
 **A**: 確保使用 HTTPS 訪問網站，GitHub Pages 會自動提供 HTTPS
 
 ### Q: 優惠資料無法載入
-**A**: 檢查瀏覽器控制台是否有跨域錯誤，確保所有資源路徑正確
+**A**: 檢查以下項目：
+1. Google Apps Script API 是否正確部署並設為公開存取
+2. `src/stores/useStoreStore.js` 中的 `BASE_URL` 是否為正確的 API 網址
+3. 瀏覽器控制台是否有 API 請求錯誤
+4. 確保傳入正確的 `companyId` 參數
 
 ### Q: 手機版介面顯示異常
 **A**: 清除瀏覽器快取，確保載入最新的 CSS 檔案

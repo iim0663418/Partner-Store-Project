@@ -173,6 +173,8 @@ https://your-username.github.io/your-repo-name/
 - ✅ 測試手動地址搜尋
 - ✅ 確認優惠卡片顯示正常
 - ✅ 測試優惠詳情彈窗
+- ✅ 驗證 Google Apps Script API 連線正常
+- ✅ 測試不同公司 ID 的資料載入
 
 ## 🐛 常見問題排除
 
@@ -214,7 +216,16 @@ npm install --save-dev terser
 npm run build
 ```
 
-### 問題 5: 部署失敗
+### 問題 5: Google Apps Script API 無法連線
+**原因**: API 設定或網路問題
+
+**解決方案**:
+1. 確認 Google Apps Script 已部署為網路應用程式
+2. 檢查 API 權限設定為「任何人」
+3. 驗證 `src/stores/useStoreStore.js` 中的 `BASE_URL` 正確
+4. 測試 API 網址是否可直接訪問
+
+### 問題 6: 部署失敗
 **檢查步驟**:
 1. 確認 Node.js 版本相容性
 2. 檢查 `package.json` 語法
@@ -296,8 +307,11 @@ GitHub Pages 會自動處理靜態資源快取，但可以在 `public/` 添加 `
 - [ ] GitHub Actions 工作流程文件已建立
 - [ ] 代碼已推送到 `main` 分支
 - [ ] GitHub Pages 已啟用並設定為 GitHub Actions
+- [ ] Google Apps Script API 已部署並可公開存取
+- [ ] `src/stores/useStoreStore.js` 中的 `BASE_URL` 已更新
 - [ ] 部署成功（Actions 頁籤顯示綠色）
 - [ ] 網站可以正常訪問
+- [ ] API 連線測試通過
 - [ ] 所有功能測試通過
 
 ## 🎉 完成！
