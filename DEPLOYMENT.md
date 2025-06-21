@@ -53,10 +53,12 @@ export default defineConfig({
 }
 ```
 
-### 3. 安裝 gh-pages
+### 3. 安裝必要依賴
 ```bash
-npm install --save-dev gh-pages
+npm install --save-dev gh-pages terser
 ```
+
+> **注意**: Vite v3+ 需要手動安裝 `terser` 進行代碼壓縮
 
 ## 📤 方法一：自動部署（推薦）
 
@@ -89,6 +91,9 @@ jobs:
         
     - name: Install dependencies
       run: npm ci
+      
+    - name: Install terser
+      run: npm install --save-dev terser
       
     - name: Build
       run: npm run build
@@ -200,12 +205,21 @@ git push
 
 **解決方案**: GitHub Pages 自動提供 HTTPS，確保使用 `https://` 網址訪問
 
-### 問題 4: 部署失敗
+### 問題 4: terser not found 錯誤
+**原因**: Vite v3+ 需要手動安裝 terser
+
+**解決方案**:
+```bash
+npm install --save-dev terser
+npm run build
+```
+
+### 問題 5: 部署失敗
 **檢查步驟**:
 1. 確認 Node.js 版本相容性
 2. 檢查 `package.json` 語法
 3. 查看 GitHub Actions 錯誤日誌
-4. 確認所有依賴都已正確安裝
+4. 確認所有依賴都已正確安裝（包括 terser）
 
 ## 🔄 更新部署
 
