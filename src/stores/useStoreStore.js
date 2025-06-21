@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia'
 import Fuse from 'fuse.js'
-import storesData from '../data/stores.json'
+
+// **關鍵**：將 BASE_URL 換成您剛才複製的網路應用程式網址
+const BASE_URL = 'https://script.google.com/macros/s/AKfycbxZXmuRtpzQjWxT7MdzH2AxK_DM8vwpMmksoINlI6dhUxViba8yy2ODdqV48vR876hI/exec';
+
+// FILE_ID_MAP 現在不再需要了，可以刪除
 
 export const useStoreStore = defineStore('stores', {
   state: () => ({
@@ -19,7 +23,8 @@ export const useStoreStore = defineStore('stores', {
       budgetRange: ''
     },
     isLoading: false,
-    error: null
+    error: null,
+    currentCompanyId: null // 新增一個狀態來記錄當前公司
   }),
 
   getters: {
@@ -137,19 +142,35 @@ export const useStoreStore = defineStore('stores', {
   },
 
   actions: {
-    async loadStores() {
-      this.isLoading = true
-      this.error = null
-      
+    async loadStores(companyId) {
+      if (!companyId) {
+        this.error = "未指定公司代號";
+        return;
+      }
+      if (this.currentCompanyId === companyId && this.allStores.length > 0) return;
+
+      this.isLoading = true;
+      this.error = null;
+      this.allStores = [];
+
+      // 組成帶有查詢參數的 API 請求網址
+      const url = `${BASE_URL}?companyId=${companyId}`;
+
       try {
-        // 模擬 API 載入延遲
-        await new Promise(resolve => setTimeout(resolve, 500))
-        this.allStores = storesData
-      } catch (error) {
-        this.error = '載入店家資料失敗'
-        console.error('Error loading stores:', error)
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          throw new Error(data.error || '從 API 載入資料失敗');
+        }
+        
+        this.allStores = data;
+        this.currentCompanyId = companyId;
+      } catch (e) {
+        this.error = e.message;
+        console.error("載入資料失敗:", e);
       } finally {
-        this.isLoading = false
+        this.isLoading = false;
       }
     },
 
