@@ -101,9 +101,17 @@
           </button>
           <button @click="expandSearch" class="expand-btn">
             <Icon name="zoom-out" size="sm" />
-            擴大搜尋範圍
+            擴大搜尋範圍至10公里
+          </button>
+          <button @click="showCustomLocationInEmptyState = !showCustomLocationInEmptyState" class="expand-btn">
+            <Icon name="search" size="sm" />
+            手動輸入位置
           </button>
         </div>
+      </div>
+
+      <div v-if="showCustomLocationInEmptyState" class="custom-location-in-empty-state">
+        <CustomLocationInput @location-selected="handleEmptyStateLocationSelected" />
       </div>
     </div>
 
@@ -148,7 +156,8 @@ export default {
     return {
       showCustomLocation: false,
       showLocationOptions: false,
-      showCustomLocationInPanel: false
+      showCustomLocationInPanel: false,
+      showCustomLocationInEmptyState: false // 新增狀態，控制無優惠時的輸入框
     }
   },
   methods: {
@@ -158,8 +167,8 @@ export default {
 
     expandSearch() {
       // 未來可以實作擴大搜尋範圍的功能
-      console.log('Expand search radius')
-      this.$emit('expand-search')
+      console.log('Expand search radius to 10km')
+      this.$emit('expand-search', 10) // 可以將範圍作為參數傳遞
     },
 
     handleCustomLocation(location) {
@@ -170,6 +179,12 @@ export default {
     handlePanelLocationSelected(location) {
       this.showLocationOptions = false
       this.showCustomLocationInPanel = false
+      this.$emit('custom-location-selected', location)
+    },
+
+    // 新增方法，處理在無優惠狀態下選擇位置後的操作
+    handleEmptyStateLocationSelected(location) {
+      this.showCustomLocationInEmptyState = false
       this.$emit('custom-location-selected', location)
     }
   },
@@ -524,6 +539,15 @@ export default {
 .tips-list li:before {
   content: "💡";
   margin-right: 0.5rem;
+}
+
+/* 為無優惠狀態下的自定義位置輸入框新增一些間距 */
+.custom-location-in-empty-state {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: var(--surface-hover);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-color);
 }
 
 /* 響應式設計 */
