@@ -109,8 +109,7 @@ src/
   "phone": "聯絡電話",
   "lat": 25.0338,          // 有座標 = 實體店家 (附近優惠)
   "lng": 121.5645,         // 無座標 = 全通路服務 (通用優惠)
-  "openingHours": "營業時間",
-  "store_type": "",        // 系統現改用座標判斷店家類型
+  "openingHours": "營業時間"
   "offers": [
     {
       "type": "discount",
