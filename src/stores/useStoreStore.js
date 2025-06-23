@@ -28,7 +28,85 @@ export const useStoreStore = defineStore('stores', {
   }),
 
   getters: {
-    // 員工附近優惠 - 核心功能
+    // Getter 1: 只處理「全通路/服務型」的優惠（沒有經緯度的店家）
+    channelOffers: (state) => {
+      const offers = []
+      let filteredStores = state.allStores
+        .filter(store => !store.lat || !store.lng || store.lat === null || store.lng === null) // 篩選出沒有經緯度的店家
+      
+      // 如果有設定類別篩選，進一步篩選
+      if (state.filters.category) {
+        filteredStores = filteredStores.filter(store => store.category === state.filters.category)
+      }
+      
+      filteredStores.forEach(store => {
+        if (store.offers) {
+          store.offers
+            .filter(offer => offer.isEmployeeOffer)
+            .forEach(offer => {
+              offers.push({
+                ...offer,
+                store: {
+                  id: store.id,
+                  name: store.name,
+                  address: store.address,
+                  phone: store.phone,
+                  category: store.category,
+                  openingHours: store.openingHours,
+                  lat: store.lat,
+                  lng: store.lng
+                }
+                // 這裡沒有 distance
+              })
+            })
+        }
+      })
+      return offers
+    },
+
+    // Getter 2: 只處理「附近實體店家」的優惠（有經緯度的店家）
+    nearbyPhysicalOffers: (state) => {
+      if (!state.userLocation) return []
+      
+      const offers = []
+      state.allStores
+        .filter(store => store.lat && store.lng && store.lat !== null && store.lng !== null) // 篩選出有經緯度的店家
+        .forEach(store => {
+          if (store.offers) {
+            const distance = calculateDistance(
+              state.userLocation.lat, 
+              state.userLocation.lng, 
+              store.lat, 
+              store.lng
+            )
+            
+            if (distance <= 5) { // 維持 5km 範圍
+              store.offers
+                .filter(offer => offer.isEmployeeOffer)
+                .forEach(offer => {
+                  offers.push({
+                    ...offer,
+                    store: {
+                      id: store.id,
+                      name: store.name,
+                      address: store.address,
+                      phone: store.phone,
+                      category: store.category,
+                      openingHours: store.openingHours,
+                      lat: store.lat,
+                      lng: store.lng
+                    },
+                    distance: distance // 帶上距離
+                  })
+                })
+            }
+          }
+        })
+        
+      return offers.sort((a, b) => a.distance - b.distance)
+    },
+
+    // 員工附近優惠 - 核心功能 (保留原有邏輯作為後備)
     nearbyOffers: (state) => {
       if (!state.userLocation) return []
       
@@ -119,6 +197,18 @@ export const useStoreStore = defineStore('stores', {
 
     availableCategories: (state) => {
       const categories = [...new Set(state.allStores.map(store => store.category))]
+      return categories.sort()
+    },
+
+    // 全通路優惠的可用類別
+    channelOfferCategories: (state) => {
+      const categories = [...new Set(
+        state.allStores
+          .filter(store => !store.lat || !store.lng || store.lat === null || store.lng === null)
+          .filter(store => store.offers && store.offers.some(offer => offer.isEmployeeOffer))
+          .map(store => store.category)
+          .filter(category => category && category.trim() !== '')
+      )]
       return categories.sort()
     },
 
