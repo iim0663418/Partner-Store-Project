@@ -1,5 +1,25 @@
 <template>
   <div class="offer-list">
+    <!-- 檢視模式切換器 - 移到最上面 -->
+    <div v-if="userLocation && (channelOffers.length > 0 || nearbyPhysicalOffers.length > 0)" class="view-switcher">
+      <button 
+        @click="currentView = 'nearby'" 
+        :class="{ active: currentView === 'nearby' }"
+        class="view-btn">
+        <Icon name="navigation" size="sm" />
+        📍 附近優惠
+        <span v-if="nearbyPhysicalOffers.length > 0" class="count-badge">{{ nearbyPhysicalOffers.length }}</span>
+      </button>
+      <button 
+        @click="currentView = 'channel'" 
+        :class="{ active: currentView === 'channel' }"
+        class="view-btn">
+        <Icon name="globe" size="sm" />
+        👑 通用優惠
+        <span v-if="channelOffers.length > 0" class="count-badge">{{ channelOffers.length }}</span>
+      </button>
+    </div>
+
     <!-- 位置狀態提示 -->
     <div v-if="!userLocation" class="location-prompt">
       <div class="prompt-content">
@@ -26,25 +46,7 @@
     </div>
 
     <!-- 優惠列表 -->
-    <div v-else-if="offers.length > 0" class="offers-container">
-      <!-- 結果摘要 -->
-      <div class="results-summary">
-        <div class="summary-content">
-          <Icon name="check-circle" class="text-green-500" />
-          <h3 class="summary-title">找到 {{ offers.length }} 個附近優惠</h3>
-        </div>
-        <div class="location-actions">
-          <div class="location-info">
-            <Icon name="navigation" size="sm" class="text-blue-500" />
-            <span class="location-text">5km 範圍內</span>
-          </div>
-          <button @click="showLocationOptions = !showLocationOptions" class="change-location-btn">
-            <Icon name="edit" size="sm" />
-            更改位置
-          </button>
-        </div>
-      </div>
-
+    <div v-else-if="channelOffers.length > 0 || nearbyPhysicalOffers.length > 0" class="offers-container">
       <!-- 位置選項 (在有優惠時顯示) -->
       <div v-if="showLocationOptions" class="location-change-panel">
         <div class="panel-header">
@@ -75,14 +77,128 @@
         </div>
       </div>
 
-      <!-- 優惠卡片流 -->
-      <div class="offers-flow">
-        <OfferCard 
-          v-for="(offer, index) in offers" 
-          :key="`${offer.store.id}-${offer.title}-${index}`"
-          :offer="offer"
-          @offer-click="handleOfferClick"
-        />
+      <!-- 附近優惠檢視 -->
+      <div v-if="currentView === 'nearby'" class="nearby-view">
+        <!-- 結果摘要 -->
+        <div class="results-summary">
+          <div class="summary-content">
+            <Icon name="navigation" class="text-blue-500" />
+            <h3 class="summary-title">附近 {{ nearbyPhysicalOffers.length }} 個員工專屬優惠</h3>
+          </div>
+          <div class="location-actions">
+            <div class="location-info">
+              <Icon name="navigation" size="sm" class="text-blue-500" />
+              <span class="location-text">5km 範圍內</span>
+            </div>
+            <button @click="showLocationOptions = !showLocationOptions" class="change-location-btn">
+              <Icon name="edit" size="sm" />
+              更改位置
+            </button>
+          </div>
+        </div>
+
+        <!-- 附近實體店家優惠 -->
+        <div v-if="nearbyPhysicalOffers.length > 0">
+          <div class="offers-flow">
+            <OfferCard 
+              v-for="(offer, index) in nearbyPhysicalOffers" 
+              :key="`nearby-${offer.store.id}-${offer.title}-${index}`"
+              :offer="offer"
+              @offer-click="handleOfferClick" 
+            />
+          </div>
+        </div>
+        <div v-else class="no-nearby-offers">
+          <div class="no-offers-content">
+            <Icon name="map-pin" size="lg" class="text-gray-400" />
+            <h3 class="no-offers-title">附近暫無實體店家優惠</h3>
+            <p class="no-offers-text">
+              目前您附近 5km 內沒有實體店家提供員工專屬優惠
+            </p>
+            <div class="no-offers-actions">
+              <button @click="$emit('get-location')" class="retry-btn">
+                <Icon name="refresh" size="sm" />
+                重新定位
+              </button>
+              <button @click="currentView = 'channel'" class="switch-view-btn">
+                <Icon name="globe" size="sm" />
+                查看通用優惠
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 通用優惠檢視 -->
+      <div v-if="currentView === 'channel'" class="channel-view">
+        <!-- 結果摘要 -->
+        <div class="results-summary">
+          <div class="summary-content">
+            <Icon name="globe" class="text-purple-500" />
+            <h3 class="summary-title">{{ channelOffers.length }} 個全通路通用優惠</h3>
+          </div>
+          <div class="summary-info">
+            <div class="info-badge">
+              <Icon name="check-circle" size="sm" class="text-green-500" />
+              <span class="info-text">全通路適用</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 類別篩選器 -->
+        <div v-if="channelOfferCategories.length > 1" class="category-filter">
+          <div class="filter-header">
+            <Icon name="filter" size="sm" class="text-gray-500" />
+            <span class="filter-label">依類別篩選</span>
+            <button v-if="filters.category" @click="clearCategoryFilter" class="clear-filter-btn">
+              <Icon name="close" size="sm" />
+              清除
+            </button>
+          </div>
+          <div class="filter-options">
+            <button 
+              @click="setCategoryFilter('')"
+              :class="{ active: !filters.category }"
+              class="filter-btn">
+              全部類別 ({{ allChannelOffersCount }})
+            </button>
+            <button 
+              v-for="category in channelOfferCategories"
+              :key="category"
+              @click="setCategoryFilter(category)"
+              :class="{ active: filters.category === category }"
+              class="filter-btn">
+              {{ category }} ({{ getCategoryCount(category) }})
+            </button>
+          </div>
+        </div>
+
+        <!-- 全通路優惠 -->
+        <div v-if="channelOffers.length > 0">
+          <div class="offers-flow">
+            <OfferCard 
+              v-for="(offer, index) in channelOffers" 
+              :key="`channel-${offer.store.id}-${offer.title}-${index}`"
+              :offer="offer"
+              @offer-click="handleOfferClick" 
+            />
+          </div>
+        </div>
+        <div v-else class="no-channel-offers">
+          <div class="no-offers-content">
+            <Icon name="globe" size="lg" class="text-gray-400" />
+            <h3 class="no-offers-title">暫無通用優惠</h3>
+            <p class="no-offers-text">
+              目前沒有全通路通用的員工專屬優惠
+            </p>
+            <div class="no-offers-actions">
+              <button @click="currentView = 'nearby'" class="switch-view-btn">
+                <Icon name="navigation" size="sm" />
+                查看附近優惠
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -94,6 +210,20 @@
         <p class="no-offers-text">
           目前您附近 5km 內沒有提供員工專屬優惠的店家
         </p>
+        
+        <!-- 如果有全通路優惠，優先推薦 -->
+        <div v-if="channelOffers.length > 0" class="channel-suggestion">
+          <div class="suggestion-content">
+            <Icon name="lightbulb" size="md" class="text-yellow-500" />
+            <h4 class="suggestion-title">但是有 {{ channelOffers.length }} 個全通路通用優惠！</h4>
+            <p class="suggestion-text">這些優惠可以在任何地點使用，不受位置限制</p>
+          </div>
+          <button @click="currentView = 'channel'" class="suggestion-btn">
+            <Icon name="globe" size="sm" />
+            查看通用優惠
+          </button>
+        </div>
+
         <div class="no-offers-actions">
           <button @click="$emit('get-location')" class="retry-btn">
             <Icon name="refresh" size="sm" />
@@ -115,8 +245,9 @@
       </div>
     </div>
 
+
     <!-- 搜尋提示 -->
-    <div v-if="offers.length > 0" class="search-tips">
+    <div v-if="(currentView === 'nearby' && nearbyPhysicalOffers.length > 0) || (currentView === 'channel' && channelOffers.length > 0)" class="search-tips">
       <h4 class="tips-title">
         <Icon name="lightbulb" size="sm" class="text-yellow-500" />
         使用便利貼
@@ -131,6 +262,8 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useStoreStore } from '../stores/useStoreStore'
 import OfferCard from './OfferCard.vue'
 import CustomLocationInput from './CustomLocationInput.vue'
 import Icon from './Icon.vue'
@@ -152,8 +285,31 @@ export default {
       default: null
     }
   },
+  computed: {
+    ...mapState(useStoreStore, ['channelOffers', 'nearbyPhysicalOffers', 'allStores', 'channelOfferCategories', 'filters']),
+    totalOffersCount() {
+      return this.channelOffers.length + this.nearbyPhysicalOffers.length
+    },
+    allChannelOffersCount() {
+      // 計算不受篩選影響的全部全通路優惠數量
+      const offers = []
+      this.allStores
+        .filter(store => !store.lat || !store.lng || store.lat === null || store.lng === null)
+        .forEach(store => {
+          if (store.offers) {
+            store.offers
+              .filter(offer => offer.isEmployeeOffer)
+              .forEach(offer => {
+                offers.push(offer)
+              })
+          }
+        })
+      return offers.length
+    }
+  },
   data() {
     return {
+      currentView: 'nearby', // 預設顯示附近優惠
       showCustomLocation: false,
       showLocationOptions: false,
       showCustomLocationInPanel: false,
@@ -186,6 +342,35 @@ export default {
     handleEmptyStateLocationSelected(location) {
       this.showCustomLocationInEmptyState = false
       this.$emit('custom-location-selected', location)
+    },
+
+    // 類別篩選相關方法
+    setCategoryFilter(category) {
+      const storeInstance = useStoreStore()
+      storeInstance.setFilters({ category })
+    },
+
+    clearCategoryFilter() {
+      const storeInstance = useStoreStore()
+      storeInstance.setFilters({ category: '' })
+    },
+
+    getCategoryCount(category) {
+      // 計算特定類別的優惠數量
+      const offers = []
+      this.allStores
+        .filter(store => !store.lat || !store.lng || store.lat === null || store.lng === null)
+        .filter(store => store.category === category)
+        .forEach(store => {
+          if (store.offers) {
+            store.offers
+              .filter(offer => offer.isEmployeeOffer)
+              .forEach(offer => {
+                offers.push(offer)
+              })
+          }
+        })
+      return offers.length
     }
   },
   emits: ['offer-selected', 'get-location', 'expand-search', 'custom-location-selected']
@@ -550,6 +735,314 @@ export default {
   border: 1px solid var(--border-color);
 }
 
+/* 區塊標題樣式 */
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary-text-color);
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-title:first-child {
+  margin-top: 0;
+}
+
+.section-title:before {
+  content: "";
+  width: 4px;
+  height: 1.5rem;
+  background: var(--primary-color);
+  border-radius: 2px;
+}
+
+/* 全通路優惠區塊 */
+.channel-offers-section {
+  margin-bottom: 2rem;
+}
+
+/* 附近店家優惠區塊 */
+.nearby-offers-section {
+  margin-bottom: 2rem;
+}
+
+.no-nearby-offers {
+  text-align: center;
+  padding: 2rem;
+  background: var(--surface-hover);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  margin-top: 1rem;
+}
+
+/* 檢視模式切換器樣式 */
+.view-switcher {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  background: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  padding: 0.875rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: var(--border-radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.view-btn:hover {
+  background: rgba(var(--primary-color-rgb), 0.1);
+  color: var(--primary-color);
+}
+
+.view-btn.active {
+  background: white;
+  color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.count-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.125rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.view-btn.active .count-badge {
+  background: var(--primary-color);
+}
+
+/* 檢視區塊樣式 */
+.nearby-view,
+.channel-view {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 摘要資訊樣式調整 */
+.summary-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.info-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface-hover);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.info-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* 切換檢視按鈕樣式 */
+.switch-view-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--primary-color);
+  background: var(--primary-color);
+  color: white;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.switch-view-btn:hover {
+  background: var(--primary-hover-color);
+  border-color: var(--primary-hover-color);
+  transform: translateY(-1px);
+}
+
+/* 無優惠狀態樣式調整 */
+.no-channel-offers {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  margin-top: 1rem;
+}
+
+/* 類別篩選器樣式 */
+.category-filter {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  justify-content: space-between;
+}
+
+.filter-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-text-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.clear-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-filter-btn:hover {
+  background: var(--surface-hover);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--surface-hover);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  background: rgba(var(--primary-color-rgb), 0.1);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.filter-btn.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  font-weight: 600;
+}
+
+.filter-btn.active:hover {
+  background: var(--primary-hover-color);
+  border-color: var(--primary-hover-color);
+}
+
+/* 全通路優惠建議區塊 */
+.channel-suggestion {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border: 2px solid #f0c419;
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.suggestion-content {
+  margin-bottom: 1.5rem;
+}
+
+.suggestion-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #856404;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.suggestion-text {
+  color: #856404;
+  font-size: 0.875rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.suggestion-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f0c419;
+  color: #856404;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(240, 196, 25, 0.3);
+}
+
+.suggestion-btn:hover {
+  background: #e6b800;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(240, 196, 25, 0.4);
+}
+
 /* 響應式設計 */
 @media (max-width: 768px) {
   .offer-list {
@@ -575,6 +1068,84 @@ export default {
   .location-prompt {
     margin: 0 -1rem 2rem;
     border-radius: 0;
+  }
+
+  /* 檢視切換器響應式 */
+  .view-switcher {
+    margin: 0 -1rem 1.5rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .view-btn {
+    font-size: 0.75rem;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .count-badge {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.375rem;
+  }
+
+  /* 摘要區塊響應式 */
+  .summary-info {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  /* 建議區塊響應式 */
+  .channel-suggestion {
+    margin: 1.5rem -1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .suggestion-title {
+    font-size: 1rem;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .suggestion-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  /* 類別篩選器響應式 */
+  .category-filter {
+    margin: 0 -1rem 1.5rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 1rem;
+  }
+
+  .filter-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .filter-options {
+    justify-content: center;
+  }
+
+  .filter-btn {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.75rem;
+    min-width: 0;
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .clear-filter-btn {
+    align-self: flex-end;
   }
 }
 </style>

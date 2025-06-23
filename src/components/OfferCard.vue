@@ -27,7 +27,7 @@
     <div class="store-info">
       <div class="store-main">
         <h4 class="store-name">{{ offer.store.name }}</h4>
-        <div class="distance-info">
+        <div class="distance-info" v-if="offer.distance != null">
           <Icon name="navigation" size="sm" class="text-blue-500" />
           <span class="distance">{{ offer.distance }}km</span>
           <span class="walk-time">步行約 {{ walkTime }} 分</span>
@@ -82,6 +82,7 @@ export default {
   computed: {
     walkTime() {
       // 假設步行速度 5km/h
+      if (this.offer.distance == null) return 0
       const timeInHours = this.offer.distance / 5
       const timeInMinutes = Math.round(timeInHours * 60)
       return Math.max(1, timeInMinutes)
@@ -102,8 +103,15 @@ export default {
 
     getDirections() {
       // 使用 Google Maps 導航
-      const url = `https://www.google.com/maps/dir/current+location/${this.offer.store.lat},${this.offer.store.lng}`
-      window.open(url, '_blank')
+      if (this.offer.store.lat && this.offer.store.lng) {
+        const url = `https://www.google.com/maps/dir/current+location/${this.offer.store.lat},${this.offer.store.lng}`
+        window.open(url, '_blank')
+      } else {
+        // 如果沒有經緯度，可以用地址搜尋
+        const searchQuery = encodeURIComponent(this.offer.store.name + ' ' + (this.offer.store.address || ''))
+        const url = `https://www.google.com/maps/search/${searchQuery}`
+        window.open(url, '_blank')
+      }
     },
 
     getOfferIcon(type) {
