@@ -8,10 +8,10 @@
     role="button"
     :aria-label="`查看 ${offer.title} 的詳細資訊`"
   >
-    <!-- 員工專屬標籤 -->
-    <div class="employee-badge">
-      <Icon name="user" size="sm" />
-      <span>員工專享</span>
+    <!-- 動態優惠標籤 -->
+    <div class="offer-badge" :class="offer.isEmployeeOffer ? 'employee-badge' : 'public-badge'">
+      <Icon :name="offer.isEmployeeOffer ? 'user' : 'users'" size="sm" />
+      <span>{{ offer.isEmployeeOffer ? '員工專享' : '一般優惠' }}</span>
     </div>
 
     <!-- 優惠標題 - 最醒目位置 -->
@@ -194,21 +194,31 @@ export default {
   outline: none;
 }
 
-/* 員工專屬標籤 */
-.employee-badge {
+/* 優惠標籤基本樣式 */
+.offer-badge {
   position: absolute;
   top: 1rem;
   right: 1rem;
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   padding: 0.375rem 0.75rem;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
+}
+
+/* 員工專屬標籤 */
+.employee-badge {
+  background: linear-gradient(135deg, #667eea, #764ba2);
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* 一般優惠標籤 */
+.public-badge {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
 }
 
 /* 優惠標題區 */
