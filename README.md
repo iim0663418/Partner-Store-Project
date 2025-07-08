@@ -109,7 +109,7 @@ src/
   "phone": "聯絡電話",
   "lat": 25.0338,          // 有座標 = 實體店家 (附近優惠)
   "lng": 121.5645,         // 無座標 = 全通路服務 (通用優惠)
-  "openingHours": "營業時間"
+  "openingHours": "營業時間",
   "offers": [
     {
       "type": "discount",
@@ -117,7 +117,7 @@ src/
       "description": "優惠詳細說明",
       "validUntil": "2024-12-31",
       "featured": true,
-      "isEmployeeOffer": true  // 必須為 true 才會顯示
+      "isEmployeeOffer": true  // true=員工專享, false=一般優惠
     }
   ]
 }
@@ -127,6 +127,7 @@ src/
 - **實體店家**: `lat` 和 `lng` 有有效座標值 → 顯示在「📍 附近優惠」
 - **全通路服務**: `lat` 或 `lng` 為 `null` → 顯示在「👑 通用優惠」
 - **距離計算**: 僅對有座標的實體店家計算距離和步行時間
+- **優惠區分**: 所有優惠都會顯示，但用視覺標籤區分員工專享與一般優惠
 
 ### 優惠類型
 - `discount` - 折扣優惠
@@ -178,7 +179,7 @@ src/
 #### 本地開發
 1. 確保 Google Apps Script API 已部署並可存取
 2. 店家基本資訊格式包含座標（可使用 Google Maps 取得）
-3. 添加員工專屬優惠（設定 `isEmployeeOffer: true`）
+3. 設定優惠類型（`isEmployeeOffer: true` 為員工專享，`false` 為一般優惠）
 
 ### 自定義樣式
 - 主要顏色變數定義在 `src/styles/global.css`

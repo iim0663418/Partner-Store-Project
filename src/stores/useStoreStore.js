@@ -42,7 +42,6 @@ export const useStoreStore = defineStore('stores', {
       filteredStores.forEach(store => {
         if (store.offers) {
           store.offers
-            .filter(offer => offer.isEmployeeOffer)
             .forEach(offer => {
               offers.push({
                 ...offer,
@@ -82,7 +81,6 @@ export const useStoreStore = defineStore('stores', {
             
             if (distance <= 5) { // 維持 5km 範圍
               store.offers
-                .filter(offer => offer.isEmployeeOffer)
                 .forEach(offer => {
                   offers.push({
                     ...offer,
@@ -124,7 +122,6 @@ export const useStoreStore = defineStore('stores', {
           // 只顯示5km內的店家
           if (distance <= 5) {
             store.offers
-              .filter(offer => offer.isEmployeeOffer) // 只顯示員工專屬優惠
               .forEach(offer => {
                 offers.push({
                   ...offer,
@@ -205,7 +202,7 @@ export const useStoreStore = defineStore('stores', {
       const categories = [...new Set(
         state.allStores
           .filter(store => !store.lat || !store.lng || store.lat === null || store.lng === null)
-          .filter(store => store.offers && store.offers.some(offer => offer.isEmployeeOffer))
+          .filter(store => store.offers && store.offers.length > 0)
           .map(store => store.category)
           .filter(category => category && category.trim() !== '')
       )]

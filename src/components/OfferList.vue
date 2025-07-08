@@ -83,7 +83,7 @@
         <div class="results-summary">
           <div class="summary-content">
             <Icon name="navigation" class="text-blue-500" />
-            <h3 class="summary-title">附近 {{ nearbyPhysicalOffers.length }} 個員工專屬優惠</h3>
+            <h3 class="summary-title">附近 {{ nearbyPhysicalOffers.length }} 個優惠</h3>
           </div>
           <div class="location-actions">
             <div class="location-info">
@@ -113,7 +113,7 @@
             <Icon name="map-pin" size="lg" class="text-gray-400" />
             <h3 class="no-offers-title">附近暫無實體店家優惠</h3>
             <p class="no-offers-text">
-              目前您附近 5km 內沒有實體店家提供員工專屬優惠
+              目前您附近 5km 內沒有實體店家提供優惠
             </p>
             <div class="no-offers-actions">
               <button @click="$emit('get-location')" class="retry-btn">
@@ -135,7 +135,7 @@
         <div class="results-summary">
           <div class="summary-content">
             <Icon name="globe" class="text-purple-500" />
-            <h3 class="summary-title">{{ channelOffers.length }} 個全通路通用優惠</h3>
+            <h3 class="summary-title">{{ channelOffers.length }} 個全通路優惠</h3>
           </div>
           <div class="summary-info">
             <div class="info-badge">
@@ -189,7 +189,7 @@
             <Icon name="globe" size="lg" class="text-gray-400" />
             <h3 class="no-offers-title">暫無通用優惠</h3>
             <p class="no-offers-text">
-              目前沒有全通路通用的員工專屬優惠
+              目前沒有全通路通用優惠
             </p>
             <div class="no-offers-actions">
               <button @click="currentView = 'nearby'" class="switch-view-btn">
@@ -206,16 +206,16 @@
     <div v-else class="no-offers-state">
       <div class="no-offers-content">
         <Icon name="search" size="lg" class="text-gray-400" />
-        <h3 class="no-offers-title">附近暫無員工專屬優惠</h3>
+        <h3 class="no-offers-title">附近暫無優惠</h3>
         <p class="no-offers-text">
-          目前您附近 5km 內沒有提供員工專屬優惠的店家
+          目前您附近 5km 內沒有提供優惠的店家
         </p>
         
         <!-- 如果有全通路優惠，優先推薦 -->
         <div v-if="channelOffers.length > 0" class="channel-suggestion">
           <div class="suggestion-content">
             <Icon name="lightbulb" size="md" class="text-yellow-500" />
-            <h4 class="suggestion-title">但是有 {{ channelOffers.length }} 個全通路通用優惠！</h4>
+            <h4 class="suggestion-title">但是有 {{ channelOffers.length }} 個全通路優惠！</h4>
             <p class="suggestion-text">這些優惠可以在任何地點使用，不受位置限制</p>
           </div>
           <button @click="currentView = 'channel'" class="suggestion-btn">
