@@ -24,10 +24,10 @@
       </button>
 
       <div v-if="offer" class="modal-body">
-        <!-- 員工專屬標誌 -->
-        <div class="employee-exclusive">
-          <Icon name="user" size="sm" />
-          <span>員工專屬優惠</span>
+        <!-- 優惠類型標誌 -->
+        <div class="offer-badge" :class="offer.isEmployeeOffer ? 'employee-exclusive' : 'public-offer'">
+          <Icon :name="offer.isEmployeeOffer ? 'user' : 'users'" size="sm" />
+          <span>{{ offer.isEmployeeOffer ? '員工專享優惠' : '一般優惠' }}</span>
         </div>
 
         <!-- 優惠標題 -->
@@ -353,17 +353,27 @@ export default {
   padding-top: 1rem;
 }
 
-.employee-exclusive {
+.offer-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.875rem;
   font-weight: 600;
   margin-bottom: 1rem;
+}
+
+.employee-exclusive {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.public-offer {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
 }
 
 .offer-title {
