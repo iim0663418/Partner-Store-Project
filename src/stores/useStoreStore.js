@@ -44,7 +44,12 @@ export const useStoreStore = defineStore('stores', {
       filteredStores.forEach(store => {
         if (store.offers) {
           store.offers
-            .filter(offer => state.filters.employeeOnly ? offer.isEmployeeOffer : true)
+            .filter(offer => {
+              if (state.filters.employeeOnly) {
+                return offer.isEmployeeOffer === true
+              }
+              return true
+            })
             .filter(offer => state.filters.communityRecommended ? (offer.communityRecommended || offer.featured) : true)
             .forEach(offer => {
               offers.push({
@@ -85,7 +90,12 @@ export const useStoreStore = defineStore('stores', {
             
             if (distance <= 5) { // 維持 5km 範圍
               store.offers
-                .filter(offer => state.filters.employeeOnly ? offer.isEmployeeOffer : true)
+                .filter(offer => {
+                  if (state.filters.employeeOnly) {
+                    return offer.isEmployeeOffer === true
+                  }
+                  return true
+                })
                 .filter(offer => state.filters.communityRecommended ? (offer.communityRecommended || offer.featured) : true)
                 .forEach(offer => {
                   offers.push({

@@ -16,9 +16,14 @@
         <span>社群推薦</span>
       </div>
       <!-- 優惠類型標籤 -->
-      <div class="offer-badge" :class="offer.isEmployeeOffer ? 'employee-badge' : 'public-badge'">
+      <div v-if="offer.isEmployeeOffer !== null && offer.isEmployeeOffer !== undefined" class="offer-badge" :class="offer.isEmployeeOffer ? 'employee-badge' : 'public-badge'">
         <Icon :name="offer.isEmployeeOffer ? 'user' : 'users'" size="sm" />
         <span>{{ offer.isEmployeeOffer ? '員工專享' : '一般優惠' }}</span>
+      </div>
+      <!-- 純社群推薦標籤 -->
+      <div v-else-if="offer.communityRecommended || offer.featured" class="offer-badge community-only">
+        <Icon name="star" size="sm" />
+        <span>社群推薦</span>
       </div>
     </div>
 
@@ -249,6 +254,12 @@ export default {
 .public-badge {
   background: linear-gradient(135deg, #28a745, #20c997);
   box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* 純社群推薦標籤 */
+.community-only {
+  background: linear-gradient(135deg, #ffd700, #ffb347);
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
 }
 
 /* 優惠標題區 */
