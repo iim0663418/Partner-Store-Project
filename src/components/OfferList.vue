@@ -2,13 +2,21 @@
   <div class="offer-list">
     <!-- 簡潔控制器 -->
     <div class="simple-controls">
-      <!-- 員工專享切換 -->
-      <button 
-        @click="toggleEmployeeOnly" 
-        :class="{ active: filters.employeeOnly }"
-        class="employee-toggle">
-        {{ filters.employeeOnly ? '員工專享' : '所有優惠' }}
-      </button>
+      <!-- 篩選切換器 -->
+      <div class="filter-toggles">
+        <button 
+          @click="toggleEmployeeOnly" 
+          :class="{ active: filters.employeeOnly }"
+          class="filter-toggle">
+          {{ filters.employeeOnly ? '員工專享' : '所有優惠' }}
+        </button>
+        <button 
+          @click="toggleCommunityRecommended" 
+          :class="{ active: filters.communityRecommended }"
+          class="filter-toggle community">
+          {{ filters.communityRecommended ? '社群推薦' : '全部店家' }}
+        </button>
+      </div>
 
       <!-- 檢視切換 -->
       <div v-if="userLocation && totalOffersCount > 0" class="view-tabs">
@@ -383,6 +391,11 @@ export default {
     toggleEmployeeOnly() {
       const storeInstance = useStoreStore()
       storeInstance.setFilters({ employeeOnly: !this.filters.employeeOnly })
+    },
+
+    toggleCommunityRecommended() {
+      const storeInstance = useStoreStore()
+      storeInstance.setFilters({ communityRecommended: !this.filters.communityRecommended })
     }
   },
   emits: ['offer-selected', 'get-location', 'expand-search', 'custom-location-selected']
@@ -800,8 +813,14 @@ export default {
   margin-bottom: 1.5rem;
 }
 
-.employee-toggle {
-  align-self: center;
+.filter-toggles {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-toggle {
   padding: 0.75rem 1.5rem;
   border: 1px solid var(--border-color);
   background: var(--surface-color);
@@ -813,15 +832,20 @@ export default {
   transition: all 0.2s ease;
 }
 
-.employee-toggle:hover {
+.filter-toggle:hover {
   border-color: var(--primary-color);
   color: var(--primary-color);
 }
 
-.employee-toggle.active {
+.filter-toggle.active {
   background: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
+}
+
+.filter-toggle.community.active {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  border-color: #ff6b6b;
 }
 
 .view-tabs {

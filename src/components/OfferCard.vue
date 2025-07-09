@@ -9,9 +9,17 @@
     :aria-label="`查看 ${offer.title} 的詳細資訊`"
   >
     <!-- 動態優惠標籤 -->
-    <div class="offer-badge" :class="offer.isEmployeeOffer ? 'employee-badge' : 'public-badge'">
-      <Icon :name="offer.isEmployeeOffer ? 'user' : 'users'" size="sm" />
-      <span>{{ offer.isEmployeeOffer ? '員工專享' : '一般優惠' }}</span>
+    <div class="offer-badges">
+      <!-- 社群推薦標籤 -->
+      <div v-if="offer.communityRecommended || offer.featured" class="community-badge">
+        <Icon name="heart" size="sm" />
+        <span>社群推薦</span>
+      </div>
+      <!-- 優惠類型標籤 -->
+      <div class="offer-badge" :class="offer.isEmployeeOffer ? 'employee-badge' : 'public-badge'">
+        <Icon :name="offer.isEmployeeOffer ? 'user' : 'users'" size="sm" />
+        <span>{{ offer.isEmployeeOffer ? '員工專享' : '一般優惠' }}</span>
+      </div>
     </div>
 
     <!-- 優惠標題 - 最醒目位置 -->
@@ -194,11 +202,33 @@ export default {
   outline: none;
 }
 
-/* 優惠標籤基本樣式 */
-.offer-badge {
+/* 優惠標籤容器 */
+.offer-badges {
   position: absolute;
   top: 1rem;
   right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+/* 社群推薦標籤 */
+.community-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  color: white;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+/* 優惠標籤基本樣式 */
+.offer-badge {
   display: flex;
   align-items: center;
   gap: 0.25rem;
