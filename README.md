@@ -1,6 +1,6 @@
-# 🏪 Partner Store Project - 員工專屬優惠平台
+# 🏪 Partner Store Project - 員工優惠 + 社群推薦平台
 
-> 為員工提供便捷的附近店家專屬優惠搜尋服務
+> 為員工提供專屬優惠搜尋與社群推薦店家的綜合服務平台
 
 ## 📱 核心使用情境
 
@@ -25,6 +25,12 @@
 - **地址搜尋**: 整合 ArcGIS API，支援台灣全境地址查詢
 - **快速選擇**: 預設常用地點（台北車站、信義區等）
 - **即時建議**: 輸入時提供智能地址建議
+
+### 🎆 社群推薦系統 (NEW!)
+- **社群推薦**: 網友推薦的好吃、好玩店家
+- **智慧標籤**: 自動區分優惠類型和社群推薦
+- **雙篩選器**: 員工專享 + 社群推薦獨立篩選
+- **純推薦支援**: 支援沒有優惠但值得一去的店家
 
 ### 🏷️ 優惠資訊展示
 - **卡片式設計**: 3秒內理解核心優惠資訊
@@ -112,22 +118,45 @@ src/
   "openingHours": "營業時間",
   "offers": [
     {
+      "offer_id": 101,
+      "store_id": 1,
       "type": "discount",
       "title": "優惠標題",
       "description": "優惠詳細說明",
       "validUntil": "2024-12-31",
-      "featured": true,
-      "isEmployeeOffer": true  // true=員工專享, false=一般優惠
+      "communityRecommended": true,  // 社群推薦 (取代 featured)
+      "isEmployeeOffer": true       // true=員工專享, false=一般優惠, null=純社群推薦
     }
   ]
 }
 ```
 
-### 🔄 店家自動分類邏輯 (NEW!)
+### 優惠資料格式 (Offers 表)
+```json
+{
+  "offer_id": 101,                    // 優惠的唯一識別碼
+  "store_id": 1,                      // 關聯到 Stores 表的店家 ID
+  "type": "discount",                // 優惠類型：discount, cashback, gift, member, bundle
+  "title": "員工專享：美食街餐電8折",
+  "description": "出示員工證享美食街所有餐電8折優惠，不限消費金額",
+  "validUntil": "2025-12-31",         // 優惠有效截止日期
+  "communityRecommended": true,       // 是否為社群推薦
+  "isEmployeeOffer": true             // true=員工專享, false=一般優惠, null=純社群推薦
+}
+```
+
+### 🔄 智慧分類系統 (NEW!)
+
+#### 店家地理分類
 - **實體店家**: `lat` 和 `lng` 有有效座標值 → 顯示在「📍 附近優惠」
 - **全通路服務**: `lat` 或 `lng` 為 `null` → 顯示在「👑 通用優惠」
 - **距離計算**: 僅對有座標的實體店家計算距離和步行時間
-- **優惠區分**: 所有優惠都會顯示，但用視覺標籤區分員工專享與一般優惠
+
+#### 優惠類型標籤
+- **員工專享**: `isEmployeeOffer: true` → 👤 藍紫色標籤
+- **一般優惠**: `isEmployeeOffer: false` → 👥 綠色標籤
+- **純社群推薦**: `isEmployeeOffer: null` + `communityRecommended: true` → ⭐ 金色標籤
+- **社群推薦**: `communityRecommended: true` → ❤️ 紅橙色標籤
 
 ### 優惠類型
 - `discount` - 折扣優惠
@@ -137,6 +166,24 @@ src/
 - `bundle` - 套餐組合
 
 ## 📈 更新日誌
+
+### v3.0.0 - 社群推薦系統 (2025-01-09)
+
+#### 🎆 重大功能新增
+- **社群推薦系統**: 新增 `communityRecommended` 欄位取代 `featured`
+- **純推薦支援**: 支援沒有優惠但值得一去的店家 (`isEmployeeOffer: null`)
+- **雙篩選器**: 員工專享 + 社群推薦獨立篩選功能
+- **智慧標籤**: 自動區分優惠類型和社群推薦
+
+#### 🎨 視覺設計升級
+- **三種標籤類型**: 員工專享(藍紫)、一般優惠(綠色)、純社群推薦(金色)
+- **雙標籤支援**: 同時顯示社群推薦和優惠類型標籤
+- **響應式佈局**: 篩選器在手機版垂直排列，桌面版水平排列
+
+#### 🔧 技術架構優化
+- **空值相容性**: 支援 `isEmployeeOffer` 為 `null/undefined` 的情況
+- **向後相容**: 同時支援 `featured` 和 `communityRecommended` 欄位
+- **篩選邏輯強化**: 嚴格檢查優惠類型，避免空值干擾
 
 ### v2.0.0 - 雙模式優惠檢視系統 (2024-06-23)
 
@@ -179,7 +226,11 @@ src/
 #### 本地開發
 1. 確保 Google Apps Script API 已部署並可存取
 2. 店家基本資訊格式包含座標（可使用 Google Maps 取得）
-3. 設定優惠類型（`isEmployeeOffer: true` 為員工專享，`false` 為一般優惠）
+3. 設定優惠類型：
+   - `isEmployeeOffer: true` - 員工專享優惠
+   - `isEmployeeOffer: false` - 一般優惠
+   - `isEmployeeOffer: null` - 純社群推薦（無優惠）
+4. 設定社群推薦：`communityRecommended: true` 標記為社群推薦店家
 
 ### 自定義樣式
 - 主要顏色變數定義在 `src/styles/global.css`
