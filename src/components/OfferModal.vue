@@ -97,10 +97,7 @@
           </h4>
           <div class="usage-content">
             <ul class="usage-list">
-              <li>請主動出示員工證件供店家核對</li>
-              <li>優惠不可與其他促銷活動併用</li>
-              <li>店家保留活動最終解釋權</li>
-              <li>建議事先致電確認優惠仍有效</li>
+              <li>請注意優惠內容及使用條件</li>
             </ul>
           </div>
         </div>
