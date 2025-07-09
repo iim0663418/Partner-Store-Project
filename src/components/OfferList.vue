@@ -1,5 +1,17 @@
 <template>
   <div class="offer-list">
+    <!-- 員工專享切換器 -->
+    <div class="employee-filter">
+      <button 
+        @click="toggleEmployeeOnly" 
+        :class="{ active: filters.employeeOnly }"
+        class="employee-toggle-btn">
+        <Icon :name="filters.employeeOnly ? 'user-check' : 'users'" size="sm" />
+        {{ filters.employeeOnly ? '只顯示員工專享' : '顯示所有優惠' }}
+        <span v-if="filters.employeeOnly" class="employee-badge">專享</span>
+      </button>
+    </div>
+
     <!-- 檢視模式切換器 - 移到最上面 -->
     <div v-if="userLocation && (channelOffers.length > 0 || nearbyPhysicalOffers.length > 0)" class="view-switcher">
       <button 
@@ -371,6 +383,11 @@ export default {
           }
         })
       return offers.length
+    },
+
+    toggleEmployeeOnly() {
+      const storeInstance = useStoreStore()
+      storeInstance.setFilters({ employeeOnly: !this.filters.employeeOnly })
     }
   },
   emits: ['offer-selected', 'get-location', 'expand-search', 'custom-location-selected']
@@ -778,6 +795,52 @@ export default {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   margin-top: 1rem;
+}
+
+/* 員工專享切換器樣式 */
+.employee-filter {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.employee-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--border-color);
+  background: var(--surface-color);
+  color: var(--text-secondary);
+  border-radius: var(--border-radius-lg);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.employee-toggle-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+.employee-toggle-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.employee-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.125rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 0.25rem;
 }
 
 /* 檢視模式切換器樣式 */

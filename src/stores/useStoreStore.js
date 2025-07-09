@@ -13,7 +13,8 @@ export const useStoreStore = defineStore('stores', {
     filters: {
       region: '',
       category: '',
-      offerType: ''
+      offerType: '',
+      employeeOnly: false // 新增員工專享篩選
     },
     userLocation: null,
     userPreferences: {
@@ -42,6 +43,7 @@ export const useStoreStore = defineStore('stores', {
       filteredStores.forEach(store => {
         if (store.offers) {
           store.offers
+            .filter(offer => state.filters.employeeOnly ? offer.isEmployeeOffer : true)
             .forEach(offer => {
               offers.push({
                 ...offer,
@@ -81,6 +83,7 @@ export const useStoreStore = defineStore('stores', {
             
             if (distance <= 5) { // 維持 5km 範圍
               store.offers
+                .filter(offer => state.filters.employeeOnly ? offer.isEmployeeOffer : true)
                 .forEach(offer => {
                   offers.push({
                     ...offer,
@@ -273,6 +276,8 @@ export const useStoreStore = defineStore('stores', {
       this.filters = {
         region: '',
         category: '',
+        offerType: '',
+        employeeOnly: false
       }
     },
 
