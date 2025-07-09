@@ -1,35 +1,48 @@
 <template>
   <div class="offer-list">
-    <!-- 員工專享切換器 -->
-    <div class="employee-filter">
-      <button 
-        @click="toggleEmployeeOnly" 
-        :class="{ active: filters.employeeOnly }"
-        class="employee-toggle-btn">
-        <Icon :name="filters.employeeOnly ? 'user-check' : 'users'" size="sm" />
-        {{ filters.employeeOnly ? '只顯示員工專享' : '顯示所有優惠' }}
-        <span v-if="filters.employeeOnly" class="employee-badge">專享</span>
-      </button>
-    </div>
+    <!-- 統一控制面板 -->
+    <div class="control-panel">
+      <!-- 員工專享切換器 -->
+      <div class="employee-filter-section">
+        <button 
+          @click="toggleEmployeeOnly" 
+          :class="{ active: filters.employeeOnly }"
+          class="employee-toggle-btn">
+          <Icon :name="filters.employeeOnly ? 'user-check' : 'users'" size="sm" />
+          {{ filters.employeeOnly ? '只顯示員工專享' : '顯示所有優惠' }}
+          <span v-if="filters.employeeOnly" class="employee-badge">專享</span>
+        </button>
+      </div>
 
-    <!-- 檢視模式切換器 - 移到最上面 -->
-    <div v-if="userLocation && (channelOffers.length > 0 || nearbyPhysicalOffers.length > 0)" class="view-switcher">
-      <button 
-        @click="currentView = 'nearby'" 
-        :class="{ active: currentView === 'nearby' }"
-        class="view-btn">
-        <Icon name="navigation" size="sm" />
-        📍 附近優惠
-        <span v-if="nearbyPhysicalOffers.length > 0" class="count-badge">{{ nearbyPhysicalOffers.length }}</span>
-      </button>
-      <button 
-        @click="currentView = 'channel'" 
-        :class="{ active: currentView === 'channel' }"
-        class="view-btn">
-        <Icon name="globe" size="sm" />
-        👑 通用優惠
-        <span v-if="channelOffers.length > 0" class="count-badge">{{ channelOffers.length }}</span>
-      </button>
+      <!-- 檢視模式切換器 -->
+      <div v-if="userLocation && (channelOffers.length > 0 || nearbyPhysicalOffers.length > 0)" class="view-switcher-section">
+        <div class="view-switcher">
+          <button 
+            @click="currentView = 'all'" 
+            :class="{ active: currentView === 'all' }"
+            class="view-btn">
+            <Icon name="grid" size="sm" />
+            顯示所有優惠
+            <span v-if="totalOffersCount > 0" class="count-badge">{{ totalOffersCount }}</span>
+          </button>
+          <button 
+            @click="currentView = 'nearby'" 
+            :class="{ active: currentView === 'nearby' }"
+            class="view-btn">
+            <Icon name="navigation" size="sm" />
+            📍 附近優惠
+            <span v-if="nearbyPhysicalOffers.length > 0" class="count-badge">{{ nearbyPhysicalOffers.length }}</span>
+          </button>
+          <button 
+            @click="currentView = 'channel'" 
+            :class="{ active: currentView === 'channel' }"
+            class="view-btn">
+            <Icon name="globe" size="sm" />
+            👑 通用優惠
+            <span v-if="channelOffers.length > 0" class="count-badge">{{ channelOffers.length }}</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- 位置狀態提示 -->
@@ -86,6 +99,56 @@
         
         <div v-if="showCustomLocationInPanel" class="custom-location-in-panel">
           <CustomLocationInput @location-selected="handlePanelLocationSelected" />
+        </div>
+      </div>
+
+      <!-- 所有優惠檢視 -->
+      <div v-if="currentView === 'all'" class="all-view">
+        <!-- 結果摘要 -->
+        <div class="results-summary">
+          <div class="summary-content">
+            <Icon name="grid" class="text-green-500" />
+            <h3 class="summary-title">全部 {{ totalOffersCount }} 個優惠</h3>
+          </div>
+          <div class="summary-info">
+            <div class="info-badge">
+              <Icon name="check-circle" size="sm" class="text-green-500" />
+              <span class="info-text">全部顯示</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 所有優惠 -->
+        <div v-if="totalOffersCount > 0">
+          <div class="offers-flow">
+            <!-- 附近優惠 -->
+            <template v-if="nearbyPhysicalOffers.length > 0">
+              <div class="section-divider">
+                <Icon name="navigation" size="sm" class="text-blue-500" />
+                <span class="section-title">📍 附近優惠 ({{ nearbyPhysicalOffers.length }})</span>
+              </div>
+              <OfferCard 
+                v-for="(offer, index) in nearbyPhysicalOffers" 
+                :key="`all-nearby-${offer.store.id}-${offer.title}-${index}`"
+                :offer="offer"
+                @offer-click="handleOfferClick" 
+              />
+            </template>
+            
+            <!-- 通用優惠 -->
+            <template v-if="channelOffers.length > 0">
+              <div class="section-divider">
+                <Icon name="globe" size="sm" class="text-purple-500" />
+                <span class="section-title">👑 通用優惠 ({{ channelOffers.length }})</span>
+              </div>
+              <OfferCard 
+                v-for="(offer, index) in channelOffers" 
+                :key="`all-channel-${offer.store.id}-${offer.title}-${index}`"
+                :offer="offer"
+                @offer-click="handleOfferClick" 
+              />
+            </template>
+          </div>
         </div>
       </div>
 
@@ -321,7 +384,7 @@ export default {
   },
   data() {
     return {
-      currentView: 'nearby', // 預設顯示附近優惠
+      currentView: 'all', // 預設顯示所有優惠
       showCustomLocation: false,
       showLocationOptions: false,
       showCustomLocationInPanel: false,
@@ -797,9 +860,18 @@ export default {
   margin-top: 1rem;
 }
 
-/* 員工專享切換器樣式 */
-.employee-filter {
-  margin-bottom: 1rem;
+/* 統一控制面板樣式 */
+.control-panel {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.employee-filter-section {
+  margin-bottom: 1.5rem;
   display: flex;
   justify-content: center;
 }
@@ -808,9 +880,9 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.875rem 2rem;
   border: 2px solid var(--border-color);
-  background: var(--surface-color);
+  background: var(--surface-hover);
   color: var(--text-secondary);
   border-radius: var(--border-radius-lg);
   font-size: 0.875rem;
@@ -824,13 +896,15 @@ export default {
   border-color: var(--primary-color);
   color: var(--primary-color);
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .employee-toggle-btn.active {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  transform: translateY(-2px);
 }
 
 .employee-badge {
@@ -843,11 +917,16 @@ export default {
   margin-left: 0.25rem;
 }
 
+.view-switcher-section {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+}
+
 /* 檢視模式切換器樣式 */
 .view-switcher {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
   background: #f8f9fa;
   padding: 0.5rem;
   border-radius: var(--border-radius-lg);
@@ -897,9 +976,33 @@ export default {
 }
 
 /* 檢視區塊樣式 */
+.all-view,
 .nearby-view,
 .channel-view {
   animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 區塊分隔器樣式 */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2rem 0 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface-hover);
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid var(--primary-color);
+}
+
+.section-divider .section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary-text-color);
+  margin: 0;
+}
+
+.section-divider:first-child {
+  margin-top: 0;
 }
 
 @keyframes fadeIn {
@@ -1133,22 +1236,56 @@ export default {
     border-radius: 0;
   }
 
-  /* 檢視切換器響應式 */
-  .view-switcher {
+  /* 控制面板響應式 */
+  .control-panel {
     margin: 0 -1rem 1.5rem;
     border-radius: 0;
     border-left: none;
     border-right: none;
+    padding: 1rem;
+  }
+
+  .employee-filter-section {
+    margin-bottom: 1rem;
+  }
+
+  .employee-toggle-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8rem;
+  }
+
+  .view-switcher-section {
+    padding-top: 1rem;
+  }
+
+  .view-switcher {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
 
   .view-btn {
-    font-size: 0.75rem;
-    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+    padding: 0.875rem 1rem;
+    justify-content: center;
   }
 
   .count-badge {
-    font-size: 0.625rem;
-    padding: 0.125rem 0.375rem;
+    font-size: 0.7rem;
+    padding: 0.125rem 0.5rem;
+  }
+
+  /* 區塊分隔器響應式 */
+  .section-divider {
+    margin: 1.5rem -1rem 1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 0.75rem 1rem;
+    border-top: 3px solid var(--primary-color);
+  }
+
+  .section-divider .section-title {
+    font-size: 0.9rem;
   }
 
   /* 摘要區塊響應式 */
