@@ -45,10 +45,14 @@
       
       <!-- Footer Section -->
       <div class="flex items-center justify-between pt-2">
-        <div class="flex items-center text-xs text-secondary">
+        <div v-if="store.phone" class="flex items-center text-xs text-secondary">
           <Icon name="phone" size="sm" spacing="sm" class="text-secondary" :aria-hidden="true" />
           <span class="hidden sm:inline" :aria-label="`電話: ${store.phone}`">{{ store.phone }}</span>
           <span class="sm:hidden" :aria-label="`電話: ${store.phone}`">聯絡</span>
+        </div>
+        <div v-else class="flex items-center text-xs text-secondary">
+          <Icon name="info" size="sm" spacing="sm" class="text-secondary" :aria-hidden="true" />
+          <span>線上服務</span>
         </div>
         
         <div v-if="showDistance && distance" class="distance-badge">

@@ -53,11 +53,11 @@
 
     <!-- 快速操作 -->
     <div class="quick-actions">
-      <button @click.stop="callStore" class="action-btn primary">
+      <button v-if="offer.store.phone" @click.stop="callStore" class="action-btn primary">
         <Icon name="phone" size="sm" />
         撥打電話
       </button>
-      <button @click.stop="getDirections" class="action-btn secondary">
+      <button @click.stop="getDirections" class="action-btn" :class="offer.store.phone ? 'secondary' : 'primary'">
         <Icon name="map" size="sm" />
         查看路線
       </button>
