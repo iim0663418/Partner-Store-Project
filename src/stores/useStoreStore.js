@@ -314,35 +314,55 @@ export const useStoreStore = defineStore('stores', {
           return
         }
 
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const location = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            }
-            this.setUserLocation(location)
-            resolve(location)
-          },
-          (error) => {
-            let errorMessage = '無法取得您的位置'
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                errorMessage = '位置存取權限被拒絕'
-                break
-              case error.POSITION_UNAVAILABLE:
-                errorMessage = '位置資訊不可用'
-                break
-              case error.TIMEOUT:
-                errorMessage = '位置請求超時'
-                break
-            }
-            reject(new Error(errorMessage))
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 300000 // 5分鐘快取
+        const successCallback = (position) => {
+          const location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
           }
+          this.setUserLocation(location)
+          resolve(location)
+        }
+
+        const errorCallback = (error) => {
+          let errorMessage = '無法取得您的位置'
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = '位置存取權限被拒絕'
+              break
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = '位置資訊不可用'
+              break
+            case error.TIMEOUT:
+              errorMessage = '位置請求超時'
+              break
+          }
+          reject(new Error(errorMessage))
+        }
+
+        const highAccuracyOptions = {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 300000
+        }
+
+        const lowAccuracyOptions = {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 300000
+        }
+
+        // 先嘗試高精準度定位
+        navigator.geolocation.getCurrentPosition(
+          successCallback,
+          () => {
+            // 高精準度失敗，嘗試低精準度定位
+            navigator.geolocation.getCurrentPosition(
+              successCallback,
+              errorCallback,
+              lowAccuracyOptions
+            )
+          },
+          highAccuracyOptions
         )
       })
     },
